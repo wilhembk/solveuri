@@ -14,10 +14,11 @@ It's only usable on Unix-like file system.
 
 To compile the program
 ```
-git clone https://github.com/Khanot/Projet-GraphesMagiques.git
+git clone https://github.com/wilhembk/solveuri.git
 cd solveuri
-make
+make all
 ```
+To remove every binaries you can execute `make clean`
 
 To run the program, start by typing `./solveuri`, followed with the wanted parameters.
 All the parameters are described in this helptext : 

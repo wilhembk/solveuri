@@ -81,10 +81,10 @@ Now you are a wizard, have fun !
 
 ### About the editor
 
-If you want to make quick adjustments to a graph, or simply create a new one you can use the editor by specifying the parameter `-e`.
+If you want to make quick adjustments to a graph, or simply create a new one you can use the editor by specifying the parameter `-e`.  
 
-Firstly, you will be prompted to start with a specific graph. From there, you can open a file with the `open`  command, or you can generate a new graph from existing presets (complete graph, complete bipartite, or antiprisms) or from scratch with the `begin` command.  
-Be aware that, due to the spcificity of our graph structure, the program always needs to know the number of vertices, before creating edges.  
+Firstly, you will be prompted to start with a specific graph. From there, you can open a file with the `open`  command, or you can generate a new graph from existing presets (complete graph, complete bipartite, or antiprisms) or from scratch with the `begin` command.    
+Be aware that, due to the spcificity of our graph structure, the program always needs to know the number of vertices, before creating edges.    
 
 Once a graph is open, you can start editing, using the name of the elements to select them. Here are the list of commands with examples:
 
@@ -133,11 +133,11 @@ relabel edges
 
 ## For the developpers
 
-This section will present the principle of the algorithm, then how you can manipulate the main functions, or add anything you need.
+This section will present the principle of the algorithm, then how you can manipulate the main functions, or add anything you need.  
 
-The heuristic method is based on an evaluation of a graph, called an objetive function. This function must recpect some properties.
+The heuristic method is based on an evaluation of a graph, called an objetive function. This function must recpect some properties.  
 
-It must take at least the graph in argument, and must return 0 if the graph has the caracteristics you want.
+It must take at least the graph in argument, and must return 0 if the graph has the caracteristics you want.  
 
 Example :
 ```
@@ -165,17 +165,17 @@ float magicFormulaUnknownConst(Solver* s) {
     return res;
 }
 ```
-This function calculated the average value of the weights of the graph g, and return the variance of the weights around this value.
-If all the weights are the same, and only in this case, the function returns 0.
-This functions will define the kind graph you want to reach, so feel free to create one if you want to solve a specific problem.
+This function calculated the average value of the weights of the graph g, and return the variance of the weights around this value.  
+If all the weights are the same, and only in this case, the function returns 0.  
+This functions will define the kind graph you want to reach, so feel free to create one if you want to solve a specific problem.  
 
-The algorithm will call those functions, and return the graph when the objective function will reach 0.
-It works with permutations. Depending of the section, it will permute some labels, and check if the objective function if lower with this permution, and repeat it until it founds a solution.
-In the main part, it permute the labels between a vertex and the edges issued from this vertex.
-When none of those permutations improve the objective function, it will permute the labels of all the vertex.
-When none of those permutations improve the objective function, it will permute all the labels between one vertex and one edge.
-When none of those permutations improve the objective function, it will permute the labels of all the edges.
-When none of those permutations improve the objective function, then the algorithm has reach a local minimum, so it permutes randomly two labels, even if it highers the objective function.
+The algorithm will call those functions, and return the graph when the objective function will reach 0.  
+It works with permutations. Depending of the section, it will permute some labels, and check if the objective function if lower with this permution, and repeat it until it founds a solution.  
+In the main part, it permute the labels between a vertex and the edges issued from this vertex.  
+When none of those permutations improve the objective function, it will permute the labels of all the vertex.  
+When none of those permutations improve the objective function, it will permute all the labels between one vertex and one edge.  
+When none of those permutations improve the objective function, it will permute the labels of all the edges.  
+When none of those permutations improve the objective function, then the algorithm has reach a local minimum, so it permutes randomly two labels, even if it highers the objective function.  
 
 
 

@@ -20,9 +20,15 @@ struct _Rectangle {
  * @param name The name of the rectangle to create
  * @param width The width of the rectangle
  * @param height THe height of the rectangle
- * @return The corresponding rectangle structure with the related graph 
+ * @return The corresponding rectangle structure with the related graph
  */
 Rectangle* createRectangle(char* name, int width, int height);
+
+/**
+ * Frees the rectangle structure
+ * @param r THe rectangle to free
+ */
+void freeRectangle(Rectangle* r);
 
 /**
  * Updates the rectangle according to the labeling of the related graph
@@ -62,4 +68,3 @@ int* getLine(Rectangle* r, int i);
  * @return A newly allocated list containing the values of the column j
  */
 int* getColumn(Rectangle* r, int j);
-

@@ -24,9 +24,10 @@
  * Starts the editor and returns the final graph
  * @param argc The argument count of the binary call
  * @param argv The arguments value of the binary call
+ * @param toEdit The graph to modify, NULL if we create it from scratch
  * @return The final version of the graph to solve
  */
-Graph* startEditor(int argc, char** argv);
+Graph* startEditor(int argc, char** argv, Graph* toEdit);
 
 /**
  * Copies the first word it sees, seperated by a space

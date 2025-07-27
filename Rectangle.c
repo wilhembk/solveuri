@@ -51,6 +51,15 @@ Rectangle* createRectangle(char* name, int width, int height) {
     return res;
 }
 
+void freeRectangle(Rectangle* r) {
+    freeGraph(r->g);
+    for (int i = 0; i < r->height; i++) {
+        free(r->table[i]);
+    }
+    free(r->table);
+    free(r);
+}
+
 Rectangle* updateRectangle(Rectangle* r) {
     /* Updates the table if the graph has been modified */
     for (int i = 0; i < r->g->nbe; i++) {
@@ -130,4 +139,3 @@ int* getColumn(Rectangle* r, int j) {
     }
     return res;
 }
-

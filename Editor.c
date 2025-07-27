@@ -9,13 +9,13 @@
 
 #include "Editor.h"
 
-Graph* startEditor(int argc, char** argv) {
+Graph* startEditor(int argc, char** argv, Graph* toEdit) {
     clear(argc, argv);
     printf("You are going to create or modify the graph you want to solve.\n"
            "Please select an option to start the editor\n\n");
     printCommandList();
     char inputBuff[BUFFER_SIZE];
-    Graph* editedGraph = NULL;
+    Graph* editedGraph = toEdit;
     while (!editedGraph) {
         fgets(inputBuff, BUFFER_SIZE, stdin);
         editedGraph = execCommand(inputBuff);

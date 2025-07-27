@@ -10,7 +10,7 @@
 #include <string.h>
 #include <sys/time.h>
 
-int timeout=200000;
+int timeout = 200000;
 
 int checksumLabel(Graph* g) {
     int n = g->nbv;
@@ -68,15 +68,13 @@ int* labelOfVertices(Graph* g) {
 }
 
 int getMagicConst(Graph* g) {
-    Solver* s=createSolver(g);
+    Solver* s = createSolver(g);
     int res = s->tab[0]->v->label;
     for (int i = 0; i < s->tab[0]->size; i++) {
         res += s->tab[0]->issuedEdges[i]->label;
     }
     return res;
 }
-
-
 
 /**
  * Permutes the two chosen issued edges of the selected vertex.
@@ -87,11 +85,11 @@ int getMagicConst(Graph* g) {
  */
 void permuteIssuedEdges(Solver* s, int vertexIndex, int x, int y) {
     // We permute to same elements, nothing happens
-    if (x == y) return;  
+    if (x == y) return;
 
     // Retrieving issued edges of the selected vertex
-    IssuedEdges* issuedEdges = s->tab[vertexIndex]; 
-    if (x == 0) { 
+    IssuedEdges* issuedEdges = s->tab[vertexIndex];
+    if (x == 0) {
         // Permuting the vertex label with one of its issued edge label
         Vertex* v = issuedEdges->v;
         Edge* e = issuedEdges->issuedEdges[y - 1];
@@ -102,7 +100,7 @@ void permuteIssuedEdges(Solver* s, int vertexIndex, int x, int y) {
         return;
     }
 
-    if (y == 0) { 
+    if (y == 0) {
         Vertex* v = issuedEdges->v;
         Edge* e = issuedEdges->issuedEdges[x - 1];
         int temp = v->label;
@@ -120,11 +118,10 @@ void permuteIssuedEdges(Solver* s, int vertexIndex, int x, int y) {
     return;
 }
 
-
 /**
  * Get the heuristic of the current graph with knowledge of the expected graph
  * @param s The solver to study
- * @param k The magic constant 
+ * @param k The magic constant
  * @param k_d The antimagic step
  * @return 0 if the graph is (k, k_d)-antimagic
  */
@@ -187,7 +184,7 @@ float magicFormulaUnknownConst(Solver* s) {
  * @param s The solver to study
  * @return 0 if the graph is antimagic of step d
  */
-float antimagicFormulaKnownStep(Solver* s,int d) {
+float antimagicFormulaKnownStep(Solver* s, int d) {
     // Renvoie un nombre, plus le nombre est proche de 0, plus le graphe est
     // proche d'etre magique
     float res = 0;
@@ -202,14 +199,13 @@ float antimagicFormulaKnownStep(Solver* s,int d) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
 
     if (d < 0) qsort(weights, nb, sizeof(int), cmp_inv);
     if (d > 0) qsort(weights, nb, sizeof(int), cmp);
-    
-    for (int i = 0; i < nb-1; i++) {
-        res += (weights[i+1] - weights[i]-d) *(weights[i+1] - weights[i]-d);
+
+    for (int i = 0; i < nb - 1; i++) {
+        res += (weights[i + 1] - weights[i] - d) * (weights[i + 1] - weights[i] - d);
     }
     return res;
 }
@@ -234,23 +230,22 @@ float antimagicFormulaUnknownConst(Solver* s) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
 
-    qsort(weights,nb, sizeof(int), cmp);
-    
-    for (int i = 0; i < nb-1; i++) {
-        res += weights[i+1] -weights[i];
+    qsort(weights, nb, sizeof(int), cmp);
+
+    for (int i = 0; i < nb - 1; i++) {
+        res += weights[i + 1] - weights[i];
     }
-    moyenne=res/(nb-1);
-    res=0;
-    for (int i = 0; i < nb-1; i++) {
-        res += (weights[i+1] - weights[i]-moyenne) *(weights[i+1] - weights[i]-moyenne);
+    moyenne = res / (nb - 1);
+    res = 0;
+    for (int i = 0; i < nb - 1; i++) {
+        res += (weights[i + 1] - weights[i] - moyenne) * (weights[i + 1] - weights[i] - moyenne);
     }
-    
+
     return res;
 }
-float antimagicFormulaKnownConst(Solver* s,int a) {
+float antimagicFormulaKnownConst(Solver* s, int a) {
     // Renvoie un nombre, plus le nombre est proche de 0, plus le graphe est
     // proche d'etre magique
     float res = 0;
@@ -265,18 +260,17 @@ float antimagicFormulaKnownConst(Solver* s,int a) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
 
-    qsort(weights,nb, sizeof(int), cmp);
+    qsort(weights, nb, sizeof(int), cmp);
 
-    for (int i = 0; i < nb-1; i++) {
-        res += weights[i+1] -weights[i];
+    for (int i = 0; i < nb - 1; i++) {
+        res += weights[i + 1] - weights[i];
     }
-    moyenne=res/(nb-1);
-    res=0;
+    moyenne = res / (nb - 1);
+    res = 0;
     for (int i = 0; i < nb; i++) {
-        res += (weights[i] - (a+ i*moyenne)) *(weights[i] - (a+ i*moyenne));
+        res += (weights[i] - (a + i * moyenne)) * (weights[i] - (a + i * moyenne));
     }
     return res;
 }
@@ -294,13 +288,12 @@ float allDifferentFormula(Solver* s) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
 
-    qsort(weights,nb, sizeof(int), cmp);
+    qsort(weights, nb, sizeof(int), cmp);
 
-    for (int i = 0; i < nb-1; i++) {
-        res += (weights[i+1] ==weights[i]);
+    for (int i = 0; i < nb - 1; i++) {
+        res += (weights[i + 1] == weights[i]);
     }
     return res;
 }
@@ -312,7 +305,7 @@ float allDifferentFormula(Solver* s) {
  * @param d_k The pointer to where to store the value of d_k
  */
 void getAntimagicConst(Solver* s, int* k, int* d_k) {
-    
+
     int nb = s->g->nbv;
 
     int weights[nb];
@@ -324,20 +317,18 @@ void getAntimagicConst(Solver* s, int* k, int* d_k) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
-    qsort(weights,nb, sizeof(int), cmp);
-    int d=weights[1]-weights[0];
-    for (int i = 1; i < nb-1; i++) {
-        if( weights[i+1] -weights[i]!=d){
-            weights[0]=0;
-            d=0;
+    qsort(weights, nb, sizeof(int), cmp);
+    int d = weights[1] - weights[0];
+    for (int i = 1; i < nb - 1; i++) {
+        if (weights[i + 1] - weights[i] != d) {
+            weights[0] = 0;
+            d = 0;
         }
     }
-    *k=weights[0];
-    *d_k=d;
+    *k = weights[0];
+    *d_k = d;
 }
-
 
 /**
  * Checks if the graph is antimagic without the knowledge of the constant
@@ -345,7 +336,7 @@ void getAntimagicConst(Solver* s, int* k, int* d_k) {
  * @param d The antimagic step
  * @return 1 if the graph is antimagic of step d, 0 if not
  */
-int IsAntimagicStep(Solver* s,int d) {
+int IsAntimagicStep(Solver* s, int d) {
     int nb = s->g->nbv;
 
     int weights[nb];
@@ -357,16 +348,15 @@ int IsAntimagicStep(Solver* s,int d) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
-    qsort(weights,nb, sizeof(int), cmp);
-    
-    for (int i = 0; i < nb-1; i++) {
-        if( weights[i+1] -weights[i]!=d){
+    qsort(weights, nb, sizeof(int), cmp);
+
+    for (int i = 0; i < nb - 1; i++) {
+        if (weights[i + 1] - weights[i] != d) {
             return 0;
         }
     }
-    
+
     return weights[0];
 }
 
@@ -377,7 +367,7 @@ int IsAntimagicStep(Solver* s,int d) {
  * @param d The antimagic step
  * @return 1 if the graph is (a,d)-antimagic, 0 if not
  */
-int IsAntimagic(Solver* s,int a,int d) {
+int IsAntimagic(Solver* s, int a, int d) {
 
     int nb = s->g->nbv;
 
@@ -390,19 +380,18 @@ int IsAntimagic(Solver* s,int a,int d) {
             temp += s->tab[i]->issuedEdges[j]->label;
         }
         weights[i] = temp;
-        
     }
-    
-    qsort(weights,nb, sizeof(int), cmp);
-    if(weights[0]!=a){
+
+    qsort(weights, nb, sizeof(int), cmp);
+    if (weights[0] != a) {
         return 0;
     }
-    for (int i = 0; i < nb-1; i++) {
-        if( weights[i+1] -weights[i]!=d){
+    for (int i = 0; i < nb - 1; i++) {
+        if (weights[i + 1] - weights[i] != d) {
             return 0;
         }
     }
-    
+
     return 1;
 }
 
@@ -442,7 +431,6 @@ int magicFormulaRectangle(Solver* s, int u, int v, int d_u, int d_v) {
         }
     }
 
-
     if (d_u > 0) qsort(weightsColumn, height, sizeof(int), cmp);
     if (d_u < 0) qsort(weightsColumn, height, sizeof(int), cmp_inv);
     if (d_v > 0) qsort(weightsLign, width, sizeof(int), cmp);
@@ -479,7 +467,7 @@ int isMagic(Solver* s, int k) {
 }
 
 /**
- * Checks if the graph is magic 
+ * Checks if the graph is magic
  * @param s The solver to study
  * @return 1 if the graph is magic, 0 if not
  */
@@ -500,11 +488,11 @@ int isMagicUnknwonConst(Solver* s) {
 
 /**
  * Finds the best graph by checking permutation between vertices.
- * @param method 0 to solve an antimagic graph (k, d_k), 
+ * @param method 0 to solve an antimagic graph (k, d_k),
  * 1 to solve an antimagic (k, d_k), (l, d_l) rectangle,
  * 2 to find a VMT
  * 3 to find a VAT knowing a step
- * 
+ *
  * @param s The solver to study
  * @param k Depends on the method, can be ignored
  * @param l Depends on the method, can be ignored
@@ -515,17 +503,17 @@ int isMagicUnknwonConst(Solver* s) {
  * @return 1 if a new graph was discovered, 0 if not
  */
 int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
-                        int* tabooPermutations, int sizePT) {
+                      int* tabooPermutations, int sizePT) {
 
     float magicVal;
     if (method == 0) { magicVal = magicFormula(s, k, d_k); }
-    if (method == 1) { magicVal = magicFormulaRectangle(s, k, l, d_k, d_l);}
+    if (method == 1) { magicVal = magicFormulaRectangle(s, k, l, d_k, d_l); }
     if (method == 2) { magicVal = magicFormulaUnknownConst(s); }
-    if (method == 3) { magicVal = antimagicFormulaKnownStep(s,d_k); }
+    if (method == 3) { magicVal = antimagicFormulaKnownStep(s, d_k); }
     if (method == 4) { magicVal = antimagicFormulaUnknownConst(s); }
-    if (method == 5) { magicVal = antimagicFormulaKnownConst(s,k); }
+    if (method == 5) { magicVal = antimagicFormulaKnownConst(s, k); }
     if (method == 6) { magicVal = allDifferentFormula(s); }
-    
+
     float currMagicVal;
 
     int indexI = 0;
@@ -534,7 +522,7 @@ int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
     int temp;
 
     for (int j = 1; j < s->g->nbv; j++) {
-        for (int i = 0; i < j; i++) { 
+        for (int i = 0; i < j; i++) {
             // We check all issued edges not yet studied from the current label
             if (inTab(s->g->vertices[i].label, tabooPermutations, sizePT) ||
                 inTab(s->g->vertices[j].label, tabooPermutations, sizePT)) {
@@ -551,11 +539,11 @@ int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
                 currMagicVal = magicFormulaRectangle(s, k, l, d_k, d_l);
             }
             if (method == 2) { currMagicVal = magicFormulaUnknownConst(s); }
-            if (method == 3) { currMagicVal = antimagicFormulaKnownStep(s,d_k); }
+            if (method == 3) { currMagicVal = antimagicFormulaKnownStep(s, d_k); }
             if (method == 4) { currMagicVal = antimagicFormulaUnknownConst(s); }
-            if (method == 5) { currMagicVal = antimagicFormulaKnownConst(s,k); }
+            if (method == 5) { currMagicVal = antimagicFormulaKnownConst(s, k); }
             if (method == 6) { currMagicVal = allDifferentFormula(s); }
-            if (currMagicVal < magicVal) { 
+            if (currMagicVal < magicVal) {
                 // This is a better graph, we save the permutation
                 indexI = i;
                 indexJ = j;
@@ -566,7 +554,6 @@ int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
             temp = s->g->vertices[i].label;
             s->g->vertices[i].label = s->g->vertices[j].label;
             s->g->vertices[j].label = temp;
-            
         }
     }
 
@@ -585,11 +572,11 @@ int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
 
 /**
  * Finds the best graph by checking permutation between a vertex and its issued edges.
- * @param method 0 to solve an antimagic graph (k, d_k), 
+ * @param method 0 to solve an antimagic graph (k, d_k),
  * 1 to solve an antimagic (k, d_k), (l, d_l) rectangle,
  * 2 to find a VMT
  * 3 to find a VAT knowing a step
- * 
+ *
  * @param s The solver to study
  * @param k Depends on the method, can be ignored
  * @param l Depends on the method, can be ignored
@@ -600,16 +587,16 @@ int bestGraphByVertex(int method, Solver* s, int k, int l, int d_k, int d_l,
  * @param sizePT The size of the provided list, 0 if ignored
  * @return 1 if a new graph was discovered, 0 if not
  */
-int bestGraphByVertexAndIssuedEdges(int method, Solver* s, 
-    int k, int l, int d_k, int d_l, int vertexIndex, int* tabooPermutations, int sizePT) {
+int bestGraphByVertexAndIssuedEdges(int method, Solver* s,
+                                    int k, int l, int d_k, int d_l, int vertexIndex, int* tabooPermutations, int sizePT) {
 
     float magicVal;
     if (method == 0) { magicVal = magicFormula(s, k, d_k); }
     if (method == 1) { magicVal = magicFormulaRectangle(s, k, l, d_k, d_l); }
     if (method == 2) { magicVal = magicFormulaUnknownConst(s); }
-    if (method == 3) { magicVal = antimagicFormulaKnownStep(s,d_k); }
+    if (method == 3) { magicVal = antimagicFormulaKnownStep(s, d_k); }
     if (method == 4) { magicVal = antimagicFormulaUnknownConst(s); }
-    if (method == 5) { magicVal = antimagicFormulaKnownConst(s,k); }
+    if (method == 5) { magicVal = antimagicFormulaKnownConst(s, k); }
     if (method == 6) { magicVal = allDifferentFormula(s); }
     float currMagicVal;
     int indexI = 0;
@@ -639,9 +626,9 @@ int bestGraphByVertexAndIssuedEdges(int method, Solver* s,
                 currMagicVal = magicFormulaRectangle(s, k, l, d_k, d_l);
             }
             if (method == 2) { currMagicVal = magicFormulaUnknownConst(s); }
-            if (method == 3) { currMagicVal = antimagicFormulaKnownStep(s,d_k); }
+            if (method == 3) { currMagicVal = antimagicFormulaKnownStep(s, d_k); }
             if (method == 4) { currMagicVal = antimagicFormulaUnknownConst(s); }
-            if (method == 5) { currMagicVal = antimagicFormulaKnownConst(s,k); }
+            if (method == 5) { currMagicVal = antimagicFormulaKnownConst(s, k); }
             if (method == 6) { currMagicVal = allDifferentFormula(s); }
 
             if (currMagicVal < magicVal) {
@@ -652,7 +639,7 @@ int bestGraphByVertexAndIssuedEdges(int method, Solver* s,
             }
 
             // Going back to the initial graph
-            permuteIssuedEdges(s, vertexIndex, i, j); 
+            permuteIssuedEdges(s, vertexIndex, i, j);
         }
     }
     if ((indexI == 0) && (indexJ == 0)) {
@@ -664,11 +651,11 @@ int bestGraphByVertexAndIssuedEdges(int method, Solver* s,
 
 /**
  * Finds the best graph by checking permutation between edges
- * @param method 0 to solve an antimagic graph (k, d_k), 
+ * @param method 0 to solve an antimagic graph (k, d_k),
  * 1 to solve an antimagic (k, d_k), (l, d_l) rectangle,
  * 2 to find a VMT
  * 3 to find a VAT knowing a step
- * 
+ *
  * @param s The solver to study
  * @param k Depends on the method, can be ignored
  * @param l Depends on the method, can be ignored
@@ -679,16 +666,16 @@ int bestGraphByVertexAndIssuedEdges(int method, Solver* s,
  * @return 1 if a new graph was discovered, 0 if not
  */
 int bestGraphByEdges(int method, Solver* s, int k, int l, int d_k, int d_l,
-                       int* tabooPermutations, int sizePT) {
+                     int* tabooPermutations, int sizePT) {
 
     float magicValue;
     if (method == 0) { magicValue = magicFormula(s, k, d_k); }
     if (method == 1) { magicValue = magicFormulaRectangle(s, k, l, d_k, d_l); }
     if (method == 2) { magicValue = magicFormulaUnknownConst(s); }
-    if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
-    if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }        
-    if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }        
-    if (method == 6) { magicValue = allDifferentFormula(s); }    
+    if (method == 3) { magicValue = antimagicFormulaKnownStep(s, d_k); }
+    if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
+    if (method == 5) { magicValue = antimagicFormulaKnownConst(s, k); }
+    if (method == 6) { magicValue = allDifferentFormula(s); }
     float currMagicValue;
     int indexI = 0;
     int indexJ = 0;
@@ -710,10 +697,10 @@ int bestGraphByEdges(int method, Solver* s, int k, int l, int d_k, int d_l,
                 currMagicValue = magicFormulaRectangle(s, k, l, d_k, d_l);
             }
             if (method == 2) { currMagicValue = magicFormulaUnknownConst(s); }
-            if (method == 3) { currMagicValue = antimagicFormulaKnownStep(s,d_k); }
+            if (method == 3) { currMagicValue = antimagicFormulaKnownStep(s, d_k); }
             if (method == 4) { currMagicValue = antimagicFormulaUnknownConst(s); }
-            if (method == 5) { currMagicValue = antimagicFormulaKnownConst(s,k); }
-            if (method == 6) { currMagicValue = allDifferentFormula(s); } 
+            if (method == 5) { currMagicValue = antimagicFormulaKnownConst(s, k); }
+            if (method == 6) { currMagicValue = allDifferentFormula(s); }
             if (currMagicValue < magicValue) {
                 indexI = i;
                 indexJ = j;
@@ -725,7 +712,7 @@ int bestGraphByEdges(int method, Solver* s, int k, int l, int d_k, int d_l,
             s->g->edges[j].label = temp;
         }
     }
-    if ((indexI == 0) && (indexJ == 0)) { 
+    if ((indexI == 0) && (indexJ == 0)) {
 
         return 0;
     }
@@ -739,11 +726,11 @@ int bestGraphByEdges(int method, Solver* s, int k, int l, int d_k, int d_l,
 
 /**
  * Finds the best graph by checking permutation between edges and vertices
- * @param method 0 to solve an antimagic graph (k, d_k), 
+ * @param method 0 to solve an antimagic graph (k, d_k),
  * 1 to solve an antimagic (k, d_k), (l, d_l) rectangle,
  * 2 to find a VMT
  * 3 to find a VAT knowing a step
- * 
+ *
  * @param s The solver to study
  * @param k Depends on the method, can be ignored
  * @param l Depends on the method, can be ignored
@@ -754,16 +741,16 @@ int bestGraphByEdges(int method, Solver* s, int k, int l, int d_k, int d_l,
  * @return 1 if a new graph was discovered, 0 if not
  */
 int bestGraphByVerticesAndEdges(int method, Solver* s, int k, int l, int d_k,
-                           int d_l, int* tabooPermutations, int sizePT) {
+                                int d_l, int* tabooPermutations, int sizePT) {
 
     float magicValue;
     if (method == 0) { magicValue = magicFormula(s, k, d_k); }
     if (method == 1) { magicValue = magicFormulaRectangle(s, k, l, d_k, d_l); }
     if (method == 2) { magicValue = magicFormulaUnknownConst(s); }
-    if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
+    if (method == 3) { magicValue = antimagicFormulaKnownStep(s, d_k); }
     if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
-    if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }
-    if (method == 6) { magicValue = allDifferentFormula(s); } 
+    if (method == 5) { magicValue = antimagicFormulaKnownConst(s, k); }
+    if (method == 6) { magicValue = allDifferentFormula(s); }
     float currMagicValue;
     int indexI = 0;
     int indexJ = 0;
@@ -785,10 +772,10 @@ int bestGraphByVerticesAndEdges(int method, Solver* s, int k, int l, int d_k,
                 currMagicValue = magicFormulaRectangle(s, k, l, d_k, d_l);
             }
             if (method == 2) { currMagicValue = magicFormulaUnknownConst(s); }
-            if (method == 3) { currMagicValue = antimagicFormulaKnownStep(s,d_k); }
+            if (method == 3) { currMagicValue = antimagicFormulaKnownStep(s, d_k); }
             if (method == 4) { currMagicValue = antimagicFormulaUnknownConst(s); }
-            if (method == 5) { currMagicValue = antimagicFormulaKnownConst(s,k); }
-            if (method == 6) { currMagicValue = allDifferentFormula(s); } 
+            if (method == 5) { currMagicValue = antimagicFormulaKnownConst(s, k); }
+            if (method == 6) { currMagicValue = allDifferentFormula(s); }
             if (currMagicValue < magicValue) {
                 indexI = i;
                 indexJ = j;
@@ -815,11 +802,11 @@ int bestGraphByVerticesAndEdges(int method, Solver* s, int k, int l, int d_k,
 
 /**
  * Tries to solve the given graph, only by permuting the vertices and issued edges together
- * @param method 0 to solve an antimagic graph (k, d_k), 
+ * @param method 0 to solve an antimagic graph (k, d_k),
  * 1 to solve an antimagic (k, d_k), (l, d_l) rectangle,
  * 2 to find a VMT
  * 3 to find a VAT knowing a step
- * 
+ *
  * @param s The solver to study
  * @param k Depends on the method, can be ignored
  * @param l Depends on the method, can be ignored
@@ -831,9 +818,9 @@ int bestGraphByVerticesAndEdges(int method, Solver* s, int k, int l, int d_k,
  */
 // TODO test
 void attemptSolveVertexAndIssuedEdges(int method, Solver* s, int k, int l, int d_k,
-                          int d_l, float precision, int* tabooPermutations,
-                          int sizePT) {
-    
+                                      int d_l, float precision, int* tabooPermutations,
+                                      int sizePT) {
+
     // We found out that randomness was less reliable that trying for all vertices
     // In the future, we would like to understand why and optimize this variable
     int randomTimeout = 3;
@@ -845,17 +832,17 @@ void attemptSolveVertexAndIssuedEdges(int method, Solver* s, int k, int l, int d
     if (method == 0) { magicValue = magicFormula(s, k, d_k); }
     if (method == 1) { magicValue = magicFormulaRectangle(s, k, l, d_k, d_l); }
     if (method == 2) { magicValue = magicFormulaUnknownConst(s); }
-    if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
+    if (method == 3) { magicValue = antimagicFormulaKnownStep(s, d_k); }
     if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
-    if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }
-    if (method == 6) { magicValue = allDifferentFormula(s); } 
+    if (method == 5) { magicValue = antimagicFormulaKnownConst(s, k); }
+    if (method == 6) { magicValue = allDifferentFormula(s); }
     while (magicValue > precision) {
-        if (iterCount > randomTimeout) { 
+        if (iterCount > randomTimeout) {
             control = 0;
             for (int alerte = 0; alerte < nbv; alerte++) {
                 control += bestGraphByVertexAndIssuedEdges(
                     method, s, k, l, d_k, d_l, alerte, tabooPermutations,
-                    sizePT); 
+                    sizePT);
             }
 
             if (control == 0) {
@@ -867,11 +854,11 @@ void attemptSolveVertexAndIssuedEdges(int method, Solver* s, int k, int l, int d
         }
 
         // We select a random vertex and check if a better graph exists
-        randomIndex=rand() % (nbv);
-        
+        randomIndex = rand() % (nbv);
+
         control = bestGraphByVertexAndIssuedEdges(
             method, s, k, l, d_k, d_l, randomIndex, tabooPermutations,
-            sizePT); 
+            sizePT);
 
         if (control == 0) {
             // Randomness did not give a better graph
@@ -883,11 +870,15 @@ void attemptSolveVertexAndIssuedEdges(int method, Solver* s, int k, int l, int d
             magicValue = magicFormulaRectangle(s, k, l, d_k, d_l);
         } else if (method == 2) {
             magicValue = magicFormulaUnknownConst(s);
-        }else if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
-        else if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
-        else if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }
-        else if (method == 6) { magicValue = allDifferentFormula(s); } 
-        
+        } else if (method == 3) {
+            magicValue = antimagicFormulaKnownStep(s, d_k);
+        } else if (method == 4) {
+            magicValue = antimagicFormulaUnknownConst(s);
+        } else if (method == 5) {
+            magicValue = antimagicFormulaKnownConst(s, k);
+        } else if (method == 6) {
+            magicValue = allDifferentFormula(s);
+        }
     }
     return;
 }
@@ -1045,12 +1036,11 @@ void printDetails(int failed, int method, Graph* g, int k, int l, int d_k,
         (d_l) ? printf("and (%d, %d)-antimagic ligns", l, d_l)
               : printf("and %d-magic ligns", l);
     }
-    if(method==2){
+    if (method == 2) {
         printf("for a %d-VMT with goal precision of %d", getMagicConst(g), precision);
     }
     printf(ANSI_RESET_ALL "\n");
 }
-
 
 /**
  * Attemps to solve the antimagic graph given a set threshold, at constant k and step d_k
@@ -1072,12 +1062,11 @@ void printDetails(int failed, int method, Graph* g, int k, int l, int d_k,
  *
  * */
 Solver* attemptSolveWithThreshold(int method, Graph* g, int k, int l, int d_k,
-                              int d_l, int precision, int* tabooPermutations,
-                              int sizePT) {
-
+                                  int d_l, int precision, int* tabooPermutations,
+                                  int sizePT) {
 
     Solver* s = createSolver(g);
-    printf("Attempting solve for %s with goal precision: %d\n",g->name, precision);
+    printf("Attempting solve for %s with goal precision: %d\n", g->name, precision);
 
     int i = 0;
     float magicValue;
@@ -1087,11 +1076,16 @@ Solver* attemptSolveWithThreshold(int method, Graph* g, int k, int l, int d_k,
         magicValue = magicFormulaRectangle(s, k, l, d_k, d_l);
     } else if (method == 2) {
         magicValue = magicFormulaUnknownConst(s);
-    } else if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
-    else if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
-    else if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }
-    else if (method == 6) { magicValue = allDifferentFormula(s); } 
-    
+    } else if (method == 3) {
+        magicValue = antimagicFormulaKnownStep(s, d_k);
+    } else if (method == 4) {
+        magicValue = antimagicFormulaUnknownConst(s);
+    } else if (method == 5) {
+        magicValue = antimagicFormulaKnownConst(s, k);
+    } else if (method == 6) {
+        magicValue = allDifferentFormula(s);
+    }
+
     while (magicValue > precision) {
 
         showProgress(i, timeout);
@@ -1100,22 +1094,22 @@ Solver* attemptSolveWithThreshold(int method, Graph* g, int k, int l, int d_k,
             printDetails(1, method, g, k, l, d_k, d_l, precision);
             return NULL;
         }
-          
+
         if (!bestGraphByVertex(method, s, k, l, d_k, d_l,
-                                 tabooPermutations, sizePT)) {
+                               tabooPermutations, sizePT)) {
             if (!bestGraphByEdges(method, s, k, l, d_k, d_l,
-                                    tabooPermutations, sizePT)) {
+                                  tabooPermutations, sizePT)) {
                 if (!bestGraphByVerticesAndEdges(method, s, k, l, d_k, d_l,
-                                            tabooPermutations, sizePT)) {
+                                                 tabooPermutations, sizePT)) {
 
                     newCloseGraph(s, tabooPermutations, sizePT);
                 }
             }
         }
-        
+
         attemptSolveVertexAndIssuedEdges(method, s, k, l, d_k, d_l, precision,
-                             tabooPermutations, sizePT);
-        
+                                         tabooPermutations, sizePT);
+
         i++;
 
         if (method == 0) {
@@ -1124,11 +1118,15 @@ Solver* attemptSolveWithThreshold(int method, Graph* g, int k, int l, int d_k,
             magicValue = magicFormulaRectangle(s, k, l, d_k, d_l);
         } else if (method == 2) {
             magicValue = magicFormulaUnknownConst(s);
-        }else if (method == 3) { magicValue = antimagicFormulaKnownStep(s,d_k); }
-        else if (method == 4) { magicValue = antimagicFormulaUnknownConst(s); }
-        else if (method == 5) { magicValue = antimagicFormulaKnownConst(s,k); }
-        else if (method == 6) { magicValue = allDifferentFormula(s); } 
-        
+        } else if (method == 3) {
+            magicValue = antimagicFormulaKnownStep(s, d_k);
+        } else if (method == 4) {
+            magicValue = antimagicFormulaUnknownConst(s);
+        } else if (method == 5) {
+            magicValue = antimagicFormulaKnownConst(s, k);
+        } else if (method == 6) {
+            magicValue = allDifferentFormula(s);
+        }
     }
     printDetails(0, method, g, k, l, d_k, d_l, precision);
 
@@ -1153,9 +1151,9 @@ Solver* attemptSolveWithThreshold(int method, Graph* g, int k, int l, int d_k,
  *
  * */
 Solver* attemptSolve(int method, Graph* g, int k, int l, int d_k,
-                             int d_l, int* permutationTaboues, int sizePT) {
+                     int d_l, int* permutationTaboues, int sizePT) {
     return attemptSolveWithThreshold(method, g, k, l, d_k, d_l, 0,
-                                permutationTaboues, sizePT);
+                                     permutationTaboues, sizePT);
 }
 
 /**
@@ -1212,7 +1210,7 @@ Graph* solveVmtWithConst(Graph* g, int k) {
     Solver* s = attemptSolveWithThreshold(0, g, k, 0, 0, 0, 0, NULL, 0);
     if (!s) return NULL;
     assert(isMagic(s, k));
-    //freeSolver(s, 0);
+    freeSolver(s, 0);
     return s->g;
 }
 
@@ -1241,8 +1239,9 @@ Graph* solveVmtWithConstTabu(Graph* g, int k, int* ignoredLabels) {
 
 Graph* solveVmt(Graph* g) {
     Solver* s = attemptSolveWithThreshold(2, g, 0, 0, 0, 0, 0, NULL, 0);
+    if (!s) return NULL;
     assert(isMagicUnknwonConst(s));
-    //freeSolver(s, 0);
+    freeSolver(s, 0);
     return s->g;
 }
 
@@ -1280,29 +1279,23 @@ Graph* solveVatWithConstAndStep(Graph* g, int a, int step) {
     }
 
     Solver* s = attemptSolveWithThreshold(0, g, a, 0, step, 0, 0, NULL, 0);
+    if (!s) return NULL;
     freeSolver(s, 0);
     return s->g;
 }
 
-
 Graph* solveVatWithstep(Graph* g, int a) {
-
-    
-
     Solver* s = attemptSolveWithThreshold(3, g, 0, 0, a, 0, 0, NULL, 0);
+    if (!s) return NULL;
     freeSolver(s, 0);
     return s->g;
 }
 Graph* solveVat(Graph* g) {
-
-    
-
-
     Solver* s = attemptSolveWithThreshold(4, g, 0, 0, 0, 0, 0, NULL, 0);
+    if (!s) return NULL;
     freeSolver(s, 0);
     return s->g;
 }
-
 
 Rectangle* solveMagicRect(Rectangle* r, int* cst_width, int* cst_height) {
 
@@ -1314,7 +1307,8 @@ Rectangle* solveMagicRect(Rectangle* r, int* cst_width, int* cst_height) {
     if (cst_height) *cst_height = height_c;
 
     Solver* s =
-        attemptSolveWithThreshold(1, r->g, width_c, height_c, 0, 0, 0, NULL, 0);
+        attemptSolveWithThreshold(1, r->g, height_c, width_c, 0, 0, 0, NULL, 0);
+    if (!s) return NULL;
     assert(isMagic_Rect(s, width_c, height_c));
     freeSolver(s, 0);
     updateRectangle(r);
@@ -1334,8 +1328,9 @@ Rectangle* solveAntiMagicRect(Rectangle* r, int width_step, int height_step,
     if (cst_width) *cst_width = width_c;
     if (cst_height) *cst_height = height_c;
 
-    Solver* s = attemptSolveWithThreshold(1, r->g, width_c, height_c, width_step,
-                                      height_step, 0, NULL, 0);
+    Solver* s = attemptSolveWithThreshold(1, r->g, height_c, width_c, height_step,
+                                          width_step, 0, NULL, 0);
+    if (!s) return NULL;
     freeSolver(s, 0);
     updateRectangle(r);
     return r;

@@ -26,8 +26,8 @@ void freeSolver(Solver* s, int freeG);
  *
  * @param 	method 0 if solving any graphs, 1 if solving a rectangle
  * @param 	g the graph to solver
- * @param 	k the magic constant, if methode 1 is used, for the columns
- * @param 	l if method 1 is used, the magic constant for the lines
+ * @param 	k the magic constant, if methode 1 is used, for the lines
+ * @param 	l if method 1 is used, the magic constant for the columns
  * @param 	d_k the step of the magic constant k, 0 if we solve a magic
  * graph
  * @param 	d_l the step of the magic constant l, used if needed
@@ -38,7 +38,7 @@ void freeSolver(Solver* s, int freeG);
  * solution was not found
  *
  * */
-Solver* attemptSolve(int method, Graph* g, int k, int l, int d_k, int d_l, int* permutationsTaboues,int sizePT);
+Solver* attemptSolve(int method, Graph* g, int k, int l, int d_k, int d_l, int* permutationsTaboues, int sizePT);
 
 // Solveur* GenererGrapheMagiqueCompletP(int nbVertex, int k, float precision);
 // Solveur* GenererGrapheMagiqueComplet(int nbVertex, int k);
@@ -55,7 +55,6 @@ int getMinMagicConst(Graph* g);
  * @return The largest possible magic constant on the graph g
  * */
 int getMaxMagicConst(Graph* g);
-
 
 /**
  * Calculates the magic constant of a VMT
@@ -92,8 +91,6 @@ Graph* solveVmt(Graph* g);
  * @param d The pointer to store the value of
  * */
 void getAntiMagicMinConstAndMaxStep(Graph* g, float* a, float* d);
-
-
 
 /**
  * Get the (k, d_k)-antimagic constants
@@ -137,4 +134,3 @@ Rectangle* solveMagicRect(Rectangle* r, int* cst_width, int* cst_height);
  * */
 Rectangle* solveAntiMagicRect(Rectangle* r, int width_step, int height_step,
                               int* cst_width, int* cst_height);
-

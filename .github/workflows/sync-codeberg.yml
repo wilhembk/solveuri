@@ -20,6 +20,6 @@ jobs:
 
     - name: Push to Codeberg
       run: |
-        git remote add codeberg https://${{ secrets.CODEBERG_USERNAME }}:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/${{ secrets.CODEBERG_USERNAME }}/repo.git
+        git remote add codeberg https://${{ secrets.CODEBERG_USERNAME }}:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/${{ secrets.CODEBERG_USERNAME }}/solveuri.git
         git push codeberg --all
         git push codeberg --tags

@@ -3,6 +3,10 @@
 Solveuri is an open source program that was firstly created to find magic labeling (VMT) on complete graph, a research project we had to do for college.   
 As we got into an intership in the LIP6 Decision team, we were invited to further study this concept, and so we enhanced the program a bunch to suits our need.  
 
+This repository is mirrored, you can access it on the following websites
+- [GitHub](https://github.com/wilhembk/solveuri) (primary)
+- [Codeberg](https://codeberg.org/wilhembk/solveuri)
+
 ## What does it do ?
 
 Solveuri uses an heuristic approach to solve magic and antimagic labelling of graphs (mainly VAT or VMT), it can solve pretty much any type of magic labelling relatively quickly.  
@@ -178,19 +182,9 @@ When none of those permutations improve the objective function, it will permute 
 When none of those permutations improve the objective function, it will permute the labels of all the edges.  
 When none of those permutations improve the objective function, then the algorithm has reach a local minimum, so it permutes randomly two labels, even if it highers the objective function.  
 
-
-
-
-
-
-
-
-
-
-
 ## References
 
 To make this program work, we read research papers that particularly helped and that you can find here  
 
-McKay, B.D. and Piperno, A., Practical Graph Isomorphism, II, Journal of Symbolic Computation, 60 (2014), pp. 94-112, https://doi.org/10.1016/j.jsc.2013.09.003   
-Wallis, W. D. (2012). Magic graphs. Springer Science & Business Media.
+- McKay, B.D. and Piperno, A., Practical Graph Isomorphism, II, Journal of Symbolic Computation, 60 (2014), pp. 94-112, https://doi.org/10.1016/j.jsc.2013.09.003   
+- Wallis, W. D. (2012). Magic graphs. Springer Science & Business Media.
